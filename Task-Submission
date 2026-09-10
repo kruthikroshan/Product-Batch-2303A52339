@@ -1,0 +1,541 @@
+1. Range GCD Query with Point Updates
+import java.util.*;
+public class Main{
+static int[] tree;
+static int gcd(int a,int b){
+while(b!=0){
+int temp=a%b;
+a=b;
+b=temp;
+}
+return a;
+}
+static void build(int index,int st,int ed,int[] arr){
+if(st==ed){
+tree[index]=arr[st];
+return;
+}
+int mid=(st+ed)/2;
+build(2*index+1,st,mid,arr);
+build(2*index+2,mid+1,ed,arr);
+tree[index]=gcd(tree[2*index+1],tree[2*index+2]);
+}
+static void update(int index,int st,int ed,int[] arr,int pos,int val){
+if(st==ed){
+arr[pos]=val;
+tree[index]=val;
+return;
+}
+int mid=(st+ed)/2;
+if(pos<=mid)
+update(2*index+1,st,mid,arr,pos,val);
+else
+update(2*index+2,mid+1,ed,arr,pos,val);
+tree[index]=gcd(tree[2*index+1],tree[2*index+2]);
+}
+static int query(int index,int st,int ed,int l,int r){
+if(r<st||l>ed)
+return 0;
+if(l<=st&&ed<=r)
+return tree[index];
+int mid=(st+ed)/2;
+return gcd(query(2*index+1,st,mid,l,r),query(2*index+2,mid+1,ed,l,r));
+}
+public static void main(String[] args){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+int[] arr=new int[n];
+tree=new int[4*n];
+for(int i=0;i<n;i++)
+arr[i]=sc.nextInt();
+build(0,0,n-1,arr);
+int q=sc.nextInt();
+while(q-->0){
+int type=sc.nextInt();
+if(type==1){
+int index=sc.nextInt();
+int value=sc.nextInt();
+update(0,0,n-1,arr,index,value);
+}else{
+int l=sc.nextInt();
+int r=sc.nextInt();
+System.out.println(query(0,0,n-1,l,r));
+}
+}
+}
+}
+2. Range Product Query with Point Updates
+import java.util.*;
+public class Main{
+static final long MOD=1000000007L;
+static long[] tree;
+static void build(int index,int st,int ed,long[] arr){
+if(st==ed){
+tree[index]=arr[st]%MOD;
+return;
+}
+int mid=(st+ed)/2;
+build(2*index+1,st,mid,arr);
+build(2*index+2,mid+1,ed,arr);
+tree[index]=(tree[2*index+1]*tree[2*index+2])%MOD;
+}
+static void update(int index,int st,int ed,long[] arr,int pos,long val){
+if(st==ed){
+arr[pos]=val;
+tree[index]=val%MOD;
+return;
+}
+int mid=(st+ed)/2;
+if(pos<=mid)
+update(2*index+1,st,mid,arr,pos,val);
+else
+update(2*index+2,mid+1,ed,arr,pos,val);
+tree[index]=(tree[2*index+1]*tree[2*index+2])%MOD;
+}
+static long query(int index,int st,int ed,int l,int r){
+if(r<st||l>ed)
+return 1;
+if(l<=st&&ed<=r)
+return tree[index];
+int mid=(st+ed)/2;
+return (query(2*index+1,st,mid,l,r)*query(2*index+2,mid+1,ed,l,r))%MOD;
+}
+public static void main(String[] args){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+long[] arr=new long[n];
+tree=new long[4*n];
+for(int i=0;i<n;i++)
+arr[i]=sc.nextLong();
+build(0,0,n-1,arr);
+int q=sc.nextInt();
+while(q-->0){
+int type=sc.nextInt();
+if(type==1){
+int index=sc.nextInt();
+long value=sc.nextLong();
+update(0,0,n-1,arr,index,value);
+}else{
+int l=sc.nextInt();
+int r=sc.nextInt();
+System.out.println(query(0,0,n-1,l,r));
+}
+}
+}
+}
+3. Range Bitwise OR Query with Point Updates
+import java.util.*;
+public class Main{
+static int[] tree;
+static void build(int index,int st,int ed,int[] arr){
+if(st==ed){
+tree[index]=arr[st];
+return;
+}
+int mid=(st+ed)/2;
+build(2*index+1,st,mid,arr);
+build(2*index+2,mid+1,ed,arr);
+tree[index]=tree[2*index+1]|tree[2*index+2];
+}
+static void update(int index,int st,int ed,int[] arr,int pos,int val){
+if(st==ed){
+arr[pos]=val;
+tree[index]=val;
+return;
+}
+int mid=(st+ed)/2;
+if(pos<=mid)
+update(2*index+1,st,mid,arr,pos,val);
+else
+update(2*index+2,mid+1,ed,arr,pos,val);
+tree[index]=tree[2*index+1]|tree[2*index+2];
+}
+static int query(int index,int st,int ed,int l,int r){
+if(r<st||l>ed)
+return 0;
+if(l<=st&&ed<=r)
+return tree[index];
+int mid=(st+ed)/2;
+return query(2*index+1,st,mid,l,r)|query(2*index+2,mid+1,ed,l,r);
+}
+public static void main(String[] args){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+int[] arr=new int[n];
+tree=new int[4*n];
+for(int i=0;i<n;i++)
+arr[i]=sc.nextInt();
+build(0,0,n-1,arr);
+int q=sc.nextInt();
+while(q-->0){
+int type=sc.nextInt();
+if(type==1){
+int index=sc.nextInt();
+int value=sc.nextInt();
+update(0,0,n-1,arr,index,value);
+}else{
+int l=sc.nextInt();
+int r=sc.nextInt();
+System.out.println(query(0,0,n-1,l,r));
+}
+}
+}
+}
+4. K-th One in a Binary Array
+import java.util.*;
+public class Main{
+static int[] tree;
+static void build(int index,int st,int ed,int[] arr){
+if(st==ed){
+tree[index]=arr[st];
+return;
+}
+int mid=(st+ed)/2;
+build(2*index+1,st,mid,arr);
+build(2*index+2,mid+1,ed,arr);
+tree[index]=tree[2*index+1]+tree[2*index+2];
+}
+static void update(int index,int st,int ed,int[] arr,int pos,int val){
+if(st==ed){
+arr[pos]=val;
+tree[index]=val;
+return;
+}
+int mid=(st+ed)/2;
+if(pos<=mid)
+update(2*index+1,st,mid,arr,pos,val);
+else
+update(2*index+2,mid+1,ed,arr,pos,val);
+tree[index]=tree[2*index+1]+tree[2*index+2];
+}
+static int kthOne(int index,int st,int ed,int k){
+if(st==ed)
+return st;
+int mid=(st+ed)/2;
+int leftCount=tree[2*index+1];
+if(k<=leftCount)
+return kthOne(2*index+1,st,mid,k);
+else
+return kthOne(2*index+2,mid+1,ed,k-leftCount);
+}
+public static void main(String[] args){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+int[] arr=new int[n];
+tree=new int[4*n];
+for(int i=0;i<n;i++)
+arr[i]=sc.nextInt();
+build(0,0,n-1,arr);
+int q=sc.nextInt();
+while(q-->0){
+int type=sc.nextInt();
+if(type==1){
+int index=sc.nextInt();
+int value=sc.nextInt();
+update(0,0,n-1,arr,index,value);
+}else{
+int k=sc.nextInt();
+if(tree[0]<k)
+System.out.println(-1);
+else
+System.out.println(kthOne(0,0,n-1,k));
+}
+}
+}
+}
+5. First Element Greater Than or Equal to X in a Range
+import java.util.*;
+public class Main{
+static int[] tree;
+static void build(int index,int st,int ed,int[] arr){
+if(st==ed){
+tree[index]=arr[st];
+return;
+}
+int mid=(st+ed)/2;
+build(2*index+1,st,mid,arr);
+build(2*index+2,mid+1,ed,arr);
+tree[index]=Math.max(tree[2*index+1],tree[2*index+2]);
+}
+static void update(int index,int st,int ed,int[] arr,int pos,int val){
+if(st==ed){
+arr[pos]=val;
+tree[index]=val;
+return;
+}
+int mid=(st+ed)/2;
+if(pos<=mid)
+update(2*index+1,st,mid,arr,pos,val);
+else
+update(2*index+2,mid+1,ed,arr,pos,val);
+tree[index]=Math.max(tree[2*index+1],tree[2*index+2]);
+}
+static int firstGreaterEqual(int index,int st,int ed,int l,int r,int x){
+if(r<st||l>ed)
+return -1;
+if(tree[index]<x)
+return -1;
+if(st==ed)
+return st;
+int mid=(st+ed)/2;
+int leftAnswer=firstGreaterEqual(2*index+1,st,mid,l,r,x);
+if(leftAnswer!=-1)
+return leftAnswer;
+return firstGreaterEqual(2*index+2,mid+1,ed,l,r,x);
+}
+public static void main(String[] args){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+int[] arr=new int[n];
+tree=new int[4*n];
+for(int i=0;i<n;i++)
+arr[i]=sc.nextInt();
+build(0,0,n-1,arr);
+int q=sc.nextInt();
+while(q-->0){
+int type=sc.nextInt();
+if(type==1){
+int index=sc.nextInt();
+int value=sc.nextInt();
+update(0,0,n-1,arr,index,value);
+}else{
+int l=sc.nextInt();
+int r=sc.nextInt();
+int x=sc.nextInt();
+System.out.println(firstGreaterEqual(0,0,n-1,l,r,x));
+}
+}
+}
+}
+6. Count Zeros in a Range with Point Updates
+import java.util.*;
+public class Main{
+static int[] tree;
+static void build(int index,int st,int ed,int[] arr){
+if(st==ed){
+tree[index]=(arr[st]==0)?1:0;
+return;
+}
+int mid=(st+ed)/2;
+build(2*index+1,st,mid,arr);
+build(2*index+2,mid+1,ed,arr);
+tree[index]=tree[2*index+1]+tree[2*index+2];
+}
+static void update(int index,int st,int ed,int[] arr,int pos,int val){
+if(st==ed){
+arr[pos]=val;
+tree[index]=(val==0)?1:0;
+return;
+}
+int mid=(st+ed)/2;
+if(pos<=mid)
+update(2*index+1,st,mid,arr,pos,val);
+else
+update(2*index+2,mid+1,ed,arr,pos,val);
+tree[index]=tree[2*index+1]+tree[2*index+2];
+}
+static int query(int index,int st,int ed,int l,int r){
+if(r<st||l>ed)
+return 0;
+if(l<=st&&ed<=r)
+return tree[index];
+int mid=(st+ed)/2;
+return query(2*index+1,st,mid,l,r)+query(2*index+2,mid+1,ed,l,r);
+}
+public static void main(String[] args){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+int[] arr=new int[n];
+tree=new int[4*n];
+for(int i=0;i<n;i++)
+arr[i]=sc.nextInt();
+build(0,0,n-1,arr);
+int q=sc.nextInt();
+while(q-->0){
+int type=sc.nextInt();
+if(type==1){
+int index=sc.nextInt();
+int value=sc.nextInt();
+update(0,0,n-1,arr,index,value);
+}else{
+int l=sc.nextInt();
+int r=sc.nextInt();
+System.out.println(query(0,0,n-1,l,r));
+}
+}
+}
+}
+7. Longest Consecutive Ones in a Query Range
+import java.util.*;
+public class Main{
+static class Node{
+int prefix,suffix,best,length;
+Node(){}
+Node(int value){
+length=1;
+if(value==1){
+prefix=1;
+suffix=1;
+best=1;
+}
+}
+}
+static Node[] tree;
+static Node merge(Node left,Node right){
+Node res=new Node();
+res.length=left.length+right.length;
+res.prefix=left.prefix;
+if(left.prefix==left.length)
+res.prefix=left.length+right.prefix;
+res.suffix=right.suffix;
+if(right.suffix==right.length)
+res.suffix=right.length+left.suffix;
+res.best=Math.max(Math.max(left.best,right.best),left.suffix+right.prefix);
+return res;
+}
+static void build(int index,int st,int ed,int[] arr){
+if(st==ed){
+tree[index]=new Node(arr[st]);
+return;
+}
+int mid=(st+ed)/2;
+build(2*index+1,st,mid,arr);
+build(2*index+2,mid+1,ed,arr);
+tree[index]=merge(tree[2*index+1],tree[2*index+2]);
+}
+static void update(int index,int st,int ed,int[] arr,int pos,int val){
+if(st==ed){
+arr[pos]=val;
+tree[index]=new Node(val);
+return;
+}
+int mid=(st+ed)/2;
+if(pos<=mid)
+update(2*index+1,st,mid,arr,pos,val);
+else
+update(2*index+2,mid+1,ed,arr,pos,val);
+tree[index]=merge(tree[2*index+1],tree[2*index+2]);
+}
+static Node query(int index,int st,int ed,int l,int r){
+if(r<st||l>ed)
+return null;
+if(l<=st&&ed<=r)
+return tree[index];
+int mid=(st+ed)/2;
+Node left=query(2*index+1,st,mid,l,r);
+Node right=query(2*index+2,mid+1,ed,l,r);
+if(left==null)
+return right;
+if(right==null)
+return left;
+return merge(left,right);
+}
+public static void main(String[] args){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+int[] arr=new int[n];
+tree=new Node[4*n];
+for(int i=0;i<n;i++)
+arr[i]=sc.nextInt();
+build(0,0,n-1,arr);
+int q=sc.nextInt();
+while(q-->0){
+int type=sc.nextInt();
+if(type==1){
+int index=sc.nextInt();
+int value=sc.nextInt();
+update(0,0,n-1,arr,index,value);
+}else{
+int l=sc.nextInt();
+int r=sc.nextInt();
+System.out.println(query(0,0,n-1,l,r).best);
+}
+}
+}
+}
+8. Maximum Pair Sum in a Range
+import java.util.*;
+public class Main{
+static class Node{
+long max1,max2;
+Node(long a,long b){
+max1=a;
+max2=b;
+}
+}
+static Node[] tree;
+static Node merge(Node a,Node b){
+long max1=Long.MIN_VALUE;
+long max2=Long.MIN_VALUE;
+long[] values={a.max1,a.max2,b.max1,b.max2};
+for(long x:values){
+if(x>max1){
+max2=max1;
+max1=x;
+}else if(x>max2){
+max2=x;
+}
+}
+return new Node(max1,max2);
+}
+static void build(int index,int st,int ed,long[] arr){
+if(st==ed){
+tree[index]=new Node(arr[st],Long.MIN_VALUE);
+return;
+}
+int mid=(st+ed)/2;
+build(2*index+1,st,mid,arr);
+build(2*index+2,mid+1,ed,arr);
+tree[index]=merge(tree[2*index+1],tree[2*index+2]);
+}
+static void update(int index,int st,int ed,long[] arr,int pos,long val){
+if(st==ed){
+arr[pos]=val;
+tree[index]=new Node(val,Long.MIN_VALUE);
+return;
+}
+int mid=(st+ed)/2;
+if(pos<=mid)
+update(2*index+1,st,mid,arr,pos,val);
+else
+update(2*index+2,mid+1,ed,arr,pos,val);
+tree[index]=merge(tree[2*index+1],tree[2*index+2]);
+}
+static Node query(int index,int st,int ed,int l,int r){
+if(r<st||l>ed)
+return null;
+if(l<=st&&ed<=r)
+return tree[index];
+int mid=(st+ed)/2;
+Node left=query(2*index+1,st,mid,l,r);
+Node right=query(2*index+2,mid+1,ed,l,r);
+if(left==null)
+return right;
+if(right==null)
+return left;
+return merge(left,right);
+}
+public static void main(String[] args){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+long[] arr=new long[n];
+tree=new Node[4*n];
+for(int i=0;i<n;i++)
+arr[i]=sc.nextLong();
+build(0,0,n-1,arr);
+int q=sc.nextInt();
+while(q-->0){
+int type=sc.nextInt();
+if(type==1){
+int index=sc.nextInt();
+long value=sc.nextLong();
+update(0,0,n-1,arr,index,value);
+}else{
+int l=sc.nextInt();
+int r=sc.nextInt();
+Node ans=query(0,0,n-1,l,r);
+System.out.println(ans.max1+ans.max2);
+}
+}
+}
+}
